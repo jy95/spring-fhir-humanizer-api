@@ -30,29 +30,26 @@ public class R4DosageController implements DosageController {
             description = "Convert dosage(s) into human readable-text into requested languages"
     )
     public Mono<String> asHumanReadableText(
-            @Valid @RequestBody Mono<DosageRequestDto> requestMono,
+            @Valid @RequestBody DosageRequestDto requestDto,
             @RequestHeader(name = HttpHeaders.ACCEPT_LANGUAGE, required = false) String acceptLanguage
     ) {
         List<Locale> locales = parseAcceptLanguageHeader(acceptLanguage);
 
-        return requestMono.map(requestDto -> {
-            var params = requestDto.getParams();
+        var params = requestDto.getParams();
 
-            Map<Locale, DosageAPIR4> resolvers = locales.stream()
-                    .collect(Collectors.toMap(
-                            lng -> lng,
-                            lng -> new DosageAPIR4(
-                                    FDSConfigR4.builder()
-                                            .locale(lng)
-                                            .displayOrder(params.getDisplayOrders())
-                                            .displaySeparator(params.getDisplaySeparator())
-                                            .build()
-                            )
-                    ));
+        Map<Locale, DosageAPIR4> resolvers = locales.stream()
+                .collect(Collectors.toMap(
+                        lng -> lng,
+                        lng -> new DosageAPIR4(
+                                FDSConfigR4.builder()
+                                        .locale(lng)
+                                        .displayOrder(params.getDisplayOrders())
+                                        .displaySeparator(params.getDisplaySeparator())
+                                        .build()
+                        )
+                ));
 
-            // TODO: perform the actual conversion using resolvers and return a result
-
-            return ""; // Replace with actual result
-        });
+        // TODO: perform the actual conversion using resolvers and return a result
+        return Mono.empty();
     }
 }
