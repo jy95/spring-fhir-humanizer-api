@@ -48,4 +48,30 @@ class R4DosageControllerTest {
                 .expectHeader().exists("BelGov-Trace-Id");
 
     }
+
+    @Test
+    void testAsHumanReadableText_invalidPayload() {
+        String invalidJsonPayload = """
+        {
+            "dosages": [ { ]
+        }
+        """;
+
+        webTestClient.post()
+                .uri("/r4/asHumanReadableText")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .bodyValue(invalidJsonPayload)
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectHeader().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON)
+                .expectHeader().exists("BelGov-Trace-Id")
+                .expectBody()
+                .jsonPath("$.type").isEqualTo("urn:problem-type:belgif:badRequest")
+                .jsonPath("$.title").isEqualTo("Bad Request")
+                .jsonPath("$.status").isEqualTo(400)
+                .jsonPath("$.href").isEqualTo("https://www.belgif.be/specification/rest/api-guide/problems/badRequest.html")
+                .jsonPath("$.timestamp").exists()
+                //.jsonPath("$.issues").isArray()
+                .jsonPath("$.instance").exists();
+    }
 }
