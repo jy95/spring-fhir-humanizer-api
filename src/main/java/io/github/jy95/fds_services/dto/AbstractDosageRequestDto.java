@@ -4,6 +4,8 @@ import io.github.jy95.fds_services.enum_.OutputFormat;
 import lombok.*;
 import io.github.jy95.fds.common.types.DisplayOrder;
 
+import jakarta.validation.constraints.Size;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -24,8 +26,6 @@ public class AbstractDosageRequestDto<T> {
     @AllArgsConstructor
     @Builder
     public static class Params {
-        @Builder.Default
-        private List<Locale> locales = List.of(Locale.ENGLISH);
 
         @Singular("displayOrder")
         private List<DisplayOrder> displayOrders;

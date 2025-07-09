@@ -4,7 +4,5 @@ import lombok.*;
 import org.hl7.fhir.r5.model.Dosage;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class R5DosageRequestDto extends AbstractDosageRequestDto<Dosage> {}
