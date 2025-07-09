@@ -1,44 +1,42 @@
 package io.github.jy95.fds_services.filter;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebFilter;
+import org.springframework.web.server.WebFilterChain;
+import reactor.core.publisher.Mono;
 
-import java.io.IOException;
 import java.util.UUID;
 
 // https://www.belgif.be/specification/rest/api-guide/#tracing
 
 @Component
-public class BelGovTraceIdFilter extends OncePerRequestFilter {
+public class BelGovTraceIdFilter implements WebFilter {
 
     private static final String TRACE_ID_HEADER = "BelGov-Trace-Id";
     private static final String RELATED_TRACE_ID_HEADER = "BelGov-Related-Trace-Id";
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
-            throws ServletException, IOException {
+    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+        ServerHttpRequest request = exchange.getRequest();
+        ServerHttpResponse response = exchange.getResponse();
 
         // Read incoming trace ID if present
-        String incomingTraceId = request.getHeader(TRACE_ID_HEADER);
+        String incomingTraceId = request.getHeaders().getFirst(TRACE_ID_HEADER);
 
-        // Generate a new trace ID (max 36 characters)
+        // Generate a new trace ID
         String newTraceId = UUID.randomUUID().toString();
 
-        // Add generated trace ID to the response
-        response.setHeader(TRACE_ID_HEADER, newTraceId);
+        // Set new trace ID in response
+        response.getHeaders().set(TRACE_ID_HEADER, newTraceId);
 
-        // If there was an incoming trace ID, set it as related in the response
+        // Set related trace ID if incoming one exists
         if (incomingTraceId != null && !incomingTraceId.isBlank()) {
-            response.setHeader(RELATED_TRACE_ID_HEADER, incomingTraceId);
+            response.getHeaders().set(RELATED_TRACE_ID_HEADER, incomingTraceId);
         }
 
-        // Continue with the filter chain
-        filterChain.doFilter(request, response);
+        return chain.filter(exchange);
     }
 }
