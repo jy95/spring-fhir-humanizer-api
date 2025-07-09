@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>io.github.jy95.fds-services</groupId>
-	<artifactId>RootController </artifactId>
+	<artifactId>RootController</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>RootController </name>
+	<name>RootController</name>
 	<description>Microservice for FHIR Dosage Support</description>
 	<url/>
 	<licenses>

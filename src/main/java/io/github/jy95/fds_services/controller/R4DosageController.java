@@ -1,7 +1,7 @@
 package io.github.jy95.fds_services.controller;
 
 import io.github.jy95.fds.r4.DosageAPIR4;
-import io.github.jy95.fds_services.dto.R4DosageRequestDto;
+import io.github.jy95.fds_services.dto.DosageRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 @RestController
 @RequestMapping("/r4")
 @Tag(name = "R4", description = "APIs for FHIR R4")
-public class R4DosageController {
+public class R4DosageController implements DosageController {
 
     @PostMapping(
             value = "/asHumanReadableText",
@@ -32,7 +32,7 @@ public class R4DosageController {
             description = "Convert dosage(s) into human readable-text into requested languages"
     )
     public String asHumanReadableText(
-            @Valid @RequestBody R4DosageRequestDto requestDto,
+            @Valid @RequestBody DosageRequestDto requestDto,
             @RequestHeader(name = HttpHeaders.ACCEPT_LANGUAGE, required = false) String acceptLanguage
     ) {
         // Extract requested locales
@@ -59,23 +59,4 @@ public class R4DosageController {
 
         return  "";
     }
-
-    /**
-     * Parse request headers into locales
-     * @param header The ACCEPT_LANGUAGE header
-     * @return List of locales parsed
-     */
-    private List<Locale> parseAcceptLanguageHeader(String header) {
-        if (header == null || header.isBlank()) {
-            return List.of(Locale.ENGLISH); // fallback to default
-        }
-
-        return Stream
-                .of(header.split(","))
-                .map(lang -> lang.split(";")[0].trim()) // ignore q values
-                .distinct()
-                .map(Locale::forLanguageTag)
-                .toList();
-    }
-
 }
