@@ -1,7 +1,6 @@
 package io.github.jy95.fds_services.dto;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

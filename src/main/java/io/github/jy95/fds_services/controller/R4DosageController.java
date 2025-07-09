@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -30,26 +31,34 @@ public class R4DosageController implements DosageController {
             description = "Convert dosage(s) into human readable-text into requested languages"
     )
     public Mono<String> asHumanReadableText(
-            @Valid @RequestBody DosageRequestDto requestDto,
+            @Valid @RequestBody Mono<DosageRequestDto> requestDtoMono,
             @RequestHeader(name = HttpHeaders.ACCEPT_LANGUAGE, required = false) String acceptLanguage
     ) {
+        // Extract requested languages
         List<Locale> locales = parseAcceptLanguageHeader(acceptLanguage);
 
-        var params = requestDto.getParams();
+        return requestDtoMono.map(
+                requestDto -> {
 
-        Map<Locale, DosageAPIR4> resolvers = locales.stream()
-                .collect(Collectors.toMap(
-                        lng -> lng,
-                        lng -> new DosageAPIR4(
-                                FDSConfigR4.builder()
-                                        .locale(lng)
-                                        .displayOrder(params.getDisplayOrders())
-                                        .displaySeparator(params.getDisplaySeparator())
-                                        .build()
-                        )
-                ));
+                    // Extract parameters
+                    var params = requestDto.getParams();
 
-        // TODO: perform the actual conversion using resolvers and return a result
-        return Mono.empty();
+                    Map<Locale, DosageAPIR4> resolvers = locales.stream()
+                            .collect(Collectors.toMap(
+                                    lng -> lng,
+                                    lng -> new DosageAPIR4(
+                                            FDSConfigR4.builder()
+                                                    .locale(lng)
+                                                    .displayOrder(params.getDisplayOrders())
+                                                    .displaySeparator(params.getDisplaySeparator())
+                                                    .build()
+                                    )
+                            ));
+
+                    // TODO: perform the actual conversion using resolvers and return a result
+                    return "";
+                }
+        );
+
     }
 }
