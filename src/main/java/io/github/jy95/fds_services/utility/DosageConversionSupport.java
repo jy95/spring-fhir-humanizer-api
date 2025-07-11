@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.jy95.fds.common.types.DosageAPI;
-import io.github.jy95.fds_services.dto.DosageReponseDto;
+import io.github.jy95.fds_services.dto.DosageResponseDto;
 import io.github.jy95.fds_services.dto.LocalizedDto;
 import io.github.jy95.fds_services.enum_.OutputFormat;
 import org.hl7.fhir.instance.model.api.IBase;
@@ -96,9 +96,9 @@ public interface DosageConversionSupport {
      * @param locales  The requested output locales (e.g., "en", "fr")
      * @param resolvers A map from locale to a corresponding {@link DosageAPI} resolver
      * @param <D>      The FHIR dosage type (e.g., Dosage)
-     * @return A Mono emitting a {@link DosageReponseDto} that includes successfully translated items and issues
+     * @return A Mono emitting a {@link DosageResponseDto} that includes successfully translated items and issues
      */
-    default <D> Mono<DosageReponseDto> translateDosagesWithIssues(
+    default <D> Mono<DosageResponseDto> translateDosagesWithIssues(
             List<List<D>> dosages,
             List<Locale> locales,
             Map<Locale, ? extends DosageAPI<?, D>> resolvers
@@ -126,7 +126,7 @@ public interface DosageConversionSupport {
                             .flatMap(t -> t.getT2().issues().stream())
                             .toList();
 
-                    return DosageReponseDto.builder()
+                    return DosageResponseDto.builder()
                             .items(items)
                             .issues(allIssues)
                             .build();

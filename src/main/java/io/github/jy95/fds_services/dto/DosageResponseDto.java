@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DosageReponseDto {
+public class DosageResponseDto {
 
     // Result
     @Builder.Default
