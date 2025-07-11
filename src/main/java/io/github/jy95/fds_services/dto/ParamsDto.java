@@ -24,9 +24,10 @@ import io.github.jy95.fds.common.config.FDSConfig;
 public class ParamsDto {
 
     // Default values, to avoid recreating them again and again
+    private static final FDSConfig DEFAULT_LIB_CONFIG = FDSConfig.builder().build();
     private static final List<Locale> DEFAULT_LOCALES = List.of(Locale.ENGLISH);
-    private static final List<DisplayOrder> DEFAULT_DISPLAY_ORDER = FDSConfig.builder().build().getDisplayOrder();
-    private static final String DEFAULT_SEPARATOR = " - ";
+    private static final List<DisplayOrder> DEFAULT_DISPLAY_ORDER = DEFAULT_LIB_CONFIG.getDisplayOrder();
+    private static final String DEFAULT_SEPARATOR = DEFAULT_LIB_CONFIG.getDisplaySeparator();
     private static final OutputFormat DEFAULT_OUTPUT_FORMAT = OutputFormat.SUMMARY;
 
     @Schema(

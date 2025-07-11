@@ -9,7 +9,6 @@ import io.github.jy95.fds_services.utility.DosageConversionSupport;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
@@ -22,7 +21,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/r4")
 @Tag(name = "R4", description = "APIs for FHIR R4")
-public class R4DosageController implements DosageController, DosageConversionSupport {
+public class R4DosageController implements DosageConversionSupport {
 
     /**
      * The FHIR context for R4.
