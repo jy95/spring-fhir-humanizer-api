@@ -16,8 +16,6 @@ import reactor.core.publisher.Mono;
 import io.github.jy95.fds.r4.config.FDSConfigR4;
 import org.hl7.fhir.r4.model.MedicationRequest;
 
-import java.util.*;
-
 @RestController
 @RequestMapping("/r4")
 @Tag(name = "R4", description = "APIs for FHIR R4")
