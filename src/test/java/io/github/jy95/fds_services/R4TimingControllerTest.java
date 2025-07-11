@@ -72,7 +72,9 @@ class R4TimingControllerTest {
                 .jsonPath("$.items").isArray()
                 .jsonPath("$.items.length()").isEqualTo(1)
                 .jsonPath("$.items[0].translations").exists()
-                .jsonPath("$.items[0].translations.en").isEqualTo("Free text posology")
+                .jsonPath("$.items[0].translations.en").value(
+                        (String actual) -> assertThat(actual).isEqualToNormalizingWhitespace("2 times every day - 30 minutes before meal - for 10 days")
+                )
                 .jsonPath("$.issues").isArray()
                 .jsonPath("$.issues.length()").isEqualTo(0);
 
@@ -82,7 +84,7 @@ class R4TimingControllerTest {
     void testAsHumanReadableText_invalidPayload() {
         String invalidJsonPayload = """
         {
-            "repeat": [ { ]
+            "timings": [ { ]
         }
         """;
 
@@ -120,40 +122,40 @@ class R4TimingControllerTest {
                 )
         );
 
-        // Raw JSON for a single dosage object
-        String singleDosageJson = """
-        {
-          "timing": {
-            "repeat": {
-              "frequency": 2,
-              "period": 1,
-              "periodUnit": "d",
-              "when": ["AC"],
-              "offset": 30,
-              "boundsDuration": {
-                "value": 10,
-                "code": "d",
-                "system": "http://hl7.org/fhir/ValueSet/duration-units"
-              }
-            }
-          }
-        }
-        """;
+        // Prepare data
+        var repeatNode = mapper.createObjectNode();
 
-        // Parse a single dosage object and put it inside an ArrayNode
-        var dosageNode = mapper.readTree(singleDosageJson);
+        repeatNode.put("frequency", 2);
+        repeatNode.put("period", 1);
+        repeatNode.put("periodUnit", "d");
+        repeatNode.putArray("when").add("AC");
+        repeatNode.put("offset", 30);
+
+        var boundsDuration = mapper.createObjectNode();
+        boundsDuration.put("value", 10);
+        boundsDuration.put("code", "d");
+        boundsDuration.put("system", "http://hl7.org/fhir/ValueSet/duration-units");
+        repeatNode.set("boundsDuration", boundsDuration);
+
         var timingArray = mapper.createArrayNode();
-        timingArray.add(dosageNode);
-
-        var requestDto = TimingRequestDto.builder()
-                .timings(timingArray)
+        timingArray.add(
+                mapper
+                        .createObjectNode()
+                        .set(
+                                "repeat",
+                                repeatNode
+                        )
+        );
+        var requestDto = TimingRequestDto
+                .builder()
                 .params(paramsDto)
+                .timings(timingArray)
                 .build();
 
         // Act & Assert
         webTestClient
                 .post()
-                .uri("/r4/dosage/asHumanReadableText")
+                .uri("/r4/timing/asHumanReadableText")
                 .body(Mono.just(requestDto), TimingRequestDto.class)
                 .exchange()
                 .expectStatus().isOk()
