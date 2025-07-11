@@ -50,10 +50,11 @@ public interface DosageConversionSupport {
         }
 
         try {
-            ObjectNode workingCopy = MAPPER.createObjectNode();
-            workingCopy.set("dosageInstruction", dosageArray);
+            ObjectNode workingObj = MAPPER.createObjectNode();
+            workingObj.set("dosageInstruction", dosageArray);
+            workingObj.put("resourceType", "MedicationRequest");
 
-            String json = MAPPER.writeValueAsString(workingCopy);
+            String json = MAPPER.writeValueAsString(workingObj);
             IBaseResource resource = parser.parseResource(wrapperClass, json);
 
             var dosageList = extractFunction.apply(resource);

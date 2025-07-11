@@ -39,13 +39,21 @@ class R4DosageControllerTest {
                 .build();
 
         // Act & Assert
-        webTestClient.post()
+        webTestClient
+                .post()
                 .uri("/r4/asHumanReadableText")
                 .body(Mono.just(requestDto), DosageRequestDto.class)
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentTypeCompatibleWith(MediaType.APPLICATION_JSON)
-                .expectHeader().exists("BelGov-Trace-Id");
+                .expectHeader().exists("BelGov-Trace-Id")
+                .expectBody()
+                .jsonPath("$.items").isArray()
+                .jsonPath("$.items.length()").isEqualTo(1)
+                .jsonPath("$.items[0].translations").exists()
+                .jsonPath("$.items[0].translations.en").isEqualTo("Free text posology")
+                .jsonPath("$.issues").isArray()
+                .jsonPath("$.issues.length()").isEqualTo(0);
 
     }
 
@@ -57,7 +65,8 @@ class R4DosageControllerTest {
         }
         """;
 
-        webTestClient.post()
+        webTestClient
+                .post()
                 .uri("/r4/asHumanReadableText")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .bodyValue(invalidJsonPayload)
