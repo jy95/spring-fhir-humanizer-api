@@ -31,7 +31,7 @@ public class ParamsDto {
     private static final OutputFormat DEFAULT_OUTPUT_FORMAT = OutputFormat.SUMMARY;
 
     @Schema(
-            description = "List of locale codes (BCP 47 format) used to localize the dosage text output",
+            description = "List of locale codes (BCP 47 format) used to localize the text output",
             example = "[\"en\", \"fr\"]",
             allowableValues = {"en", "fr", "nl", "de"},
             defaultValue = "[\"en\"]"
@@ -40,7 +40,7 @@ public class ParamsDto {
     private List<Locale> locales = DEFAULT_LOCALES;
 
     @Schema(
-            description = "List specifying the order in which dosage must be displayed.",
+            description = "List specifying the order in which elements must be displayed.",
             externalDocs = @ExternalDocumentation(
                     description = "Javadoc",
                     url = "https://jy95.github.io/fds/common/apidocs/io/github/jy95/fds/common/types/DisplayOrder.html"
@@ -51,7 +51,7 @@ public class ParamsDto {
     private List<DisplayOrder> displayOrders = DEFAULT_DISPLAY_ORDER;
 
     @Schema(
-            description = "String used to separate different displayed dosage components.",
+            description = "String used to separate different displayed components.",
             example = " - "
     )
     @Builder.Default
