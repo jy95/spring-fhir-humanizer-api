@@ -5,6 +5,7 @@ import ca.uhn.fhir.parser.IParser;
 import io.github.jy95.fds.r4.DosageAPIR4;
 import io.github.jy95.fds_services.dto.DosageRequestDto;
 import io.github.jy95.fds_services.dto.LocalizedStringDto;
+import io.github.jy95.fds_services.utility.DosageConversionSupport;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/r4")
 @Tag(name = "R4", description = "APIs for FHIR R4")
-public class R4DosageController implements DosageController {
+public class R4DosageController implements DosageController, DosageConversionSupport {
 
     /**
      * The FHIR context for R4.
@@ -52,35 +53,25 @@ public class R4DosageController implements DosageController {
                     var params = requestDto.getParams();
 
                     // Extract dosages
-                    var dosageList = validateAndExtractDosages(
+                    var dosages = validateAndExtractDosages(
                             requestDto.getDosages(),
                             JSON_PARSER,
                             MedicationRequest.class,
-                            r -> ((MedicationRequest) r).getDosageInstruction()
+                            r -> ((MedicationRequest) r).getDosageInstruction(),
+                            params.getOutputFormat()
                     );
 
                     // Create resolvers
-                    Map<Locale, DosageAPIR4> resolvers = locales.stream()
-                            .collect(Collectors.toMap(
-                                    lng -> lng,
-                                    lng -> new DosageAPIR4(
-                                            FDSConfigR4.builder()
-                                                    .locale(lng)
-                                                    .displayOrder(params.getDisplayOrders())
-                                                    .displaySeparator(params.getDisplaySeparator())
-                                                    .build()
-                                    )
-                            ));
-
-                    // Depending on what the user asked, we need to have
-                    // List<List<Dosage1, Dosage2, ...>> or List<List<Dosage1>, List<Dosage2>, ...>
-                    var dosages = switch (params.getOutputFormat()) {
-                        case SUMMARY -> List.of(dosageList);
-                        case DETAILED -> dosageList
-                                .stream()
-                                .map(List::of)
-                                .toList();
-                    };
+                    var resolvers = createResolversForLocales(
+                            locales,
+                            locale -> new DosageAPIR4(
+                                    FDSConfigR4.builder()
+                                            .locale(locale)
+                                            .displayOrder(params.getDisplayOrders())
+                                            .displaySeparator(params.getDisplaySeparator())
+                                            .build()
+                            )
+                    );
 
                     var results = dosages
                             .stream()
