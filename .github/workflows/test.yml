@@ -18,9 +18,9 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
       - name: 📦 Install dependencies
-        run: mvn -P test install
+        run: mvn install
       - name: 🧪 Run tests with coverage
-        run: mvn -P test test
+        run: mvn test
 
   codacy_coverage:
     runs-on: ubuntu-latest
@@ -36,11 +36,11 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
       - name: 📦 Install dependencies
-        run: mvn -P test install
+        run: mvn install
       - name: 🧪 Run tests with coverage
-        run: mvn -P test test
+        run: mvn test
       - name: 🤖 Run codacy-coverage-reporter
         uses: codacy/codacy-coverage-reporter-action@v1.3.0
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-          coverage-reports: target/site/jacoco-aggregate/jacoco.xml
+          coverage-reports: target/site/jacoco/jacoco.xml

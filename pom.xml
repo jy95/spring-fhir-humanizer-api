@@ -133,7 +133,6 @@
 						<phase>test</phase>
 						<goals>
 							<goal>report</goal>
-							<goal>report-aggregate</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -167,15 +166,18 @@
 				</configuration>
 			</plugin>
 
+			<!-- Used for unit tests -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.5.3</version>
+				<configuration>
+					<!-- Sets the VM argument line used when unit tests are run. -->
+					<argLine>${surefireArgLine}</argLine>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
-
-	<profiles>
-
-		<profile>
-			<id>test</id>
-		</profile>
-
-	</profiles>
 
 </project>
