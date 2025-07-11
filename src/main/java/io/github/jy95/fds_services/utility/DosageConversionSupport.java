@@ -5,9 +5,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.jy95.fds.common.types.DosageAPI;
+import io.github.jy95.fds_services.dto.LocalizedStringDto;
 import io.github.jy95.fds_services.enum_.OutputFormat;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Locale;
@@ -70,6 +73,38 @@ public interface DosageConversionSupport {
                                 resolverFactory
                         )
                 );
+    }
+
+    default <D> Mono<List<LocalizedStringDto>> translateDosagesToLocalizedText(
+            List<List<D>> dosages,
+            List<Locale> locales,
+            Map<Locale, ? extends DosageAPI<?, D>> resolvers
+    ) {
+        return Flux
+                .fromIterable(dosages)
+                .flatMap(dosageList ->
+                        Flux
+                                .fromIterable(locales)
+                                .flatMap(locale -> {
+                                    var resolver = resolvers.get(locale);
+                                    return Mono
+                                            .fromFuture(
+                                                    resolver.asHumanReadableText(dosageList)
+                                            )
+                                            .map(result -> Map.entry(locale.getLanguage(), result))
+                                            .onErrorResume(e -> {
+                                                // Skip locale on error
+                                                return Mono.empty();
+                                            });
+                                })
+                                .collectMap(Map.Entry::getKey, Map.Entry::getValue)
+                                .map(translationsMap -> LocalizedStringDto
+                                        .builder()
+                                        .translations(translationsMap)
+                                        .build()
+                                )
+                )
+                .collectList();
     }
 
 }

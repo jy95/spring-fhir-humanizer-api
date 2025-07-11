@@ -39,7 +39,7 @@ public class R4DosageController implements DosageController, DosageConversionSup
             summary = "Turn dosage(s) into text",
             description = "Convert dosage(s) into human readable-text into requested languages"
     )
-    public Mono<String> asHumanReadableText(
+    public List<LocalizedStringDto> asHumanReadableText(
             @Valid @RequestBody Mono<DosageRequestDto> requestDtoMono,
             @RequestHeader(name = HttpHeaders.ACCEPT_LANGUAGE, required = false) String acceptLanguage
     ) {
@@ -73,28 +73,11 @@ public class R4DosageController implements DosageController, DosageConversionSup
                             )
                     );
 
-                    var results = dosages
-                            .stream()
-                            .map(listOfDosages -> {
-
-                                var translations = LocalizedStringDto.builder();
-
-                                for(var locale : locales) {
-                                    var result = resolvers
-                                            .get(locale)
-                                            .asHumanReadableText(listOfDosages)
-                                            .get();
-                                    translations.entry(
-                                            locale.getLanguage(),
-                                            result
-                                    );
-                                }
-
-                                return translations.build();
-                            })
-                            .toList();
-
-                    return results;
+                    return translateDosagesToLocalizedText(
+                            dosages,
+                            locales,
+                            resolvers
+                    );
                 }
         );
 
