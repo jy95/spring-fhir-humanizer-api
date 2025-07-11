@@ -22,7 +22,7 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/r5/dosage")
 @Tag(
-        name = "R5",
+        name = "R5 Dosage",
         description = "APIs for FHIR R5 Dosage",
         externalDocs = @ExternalDocumentation(
                 url = "https://www.hl7.org/fhir/R5/dosage.html",

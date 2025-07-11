@@ -23,7 +23,7 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/r4/timing")
 @Tag(
-        name = "R4",
+        name = "R4 Timing",
         description = "APIs for FHIR R4 Timing",
         externalDocs = @ExternalDocumentation(
                 url = "https://www.hl7.org/fhir/R4/datatypes.html#timing",

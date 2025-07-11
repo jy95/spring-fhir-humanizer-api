@@ -20,7 +20,7 @@ import org.hl7.fhir.r4.model.MedicationRequest;
 @RestController
 @RequestMapping("/r4/dosage")
 @Tag(
-        name = "R4",
+        name = "R4 Dosage",
         description = "APIs for FHIR R4 Dosage",
         externalDocs = @ExternalDocumentation(
                 url = "https://www.hl7.org/fhir/R4/dosage.html",
