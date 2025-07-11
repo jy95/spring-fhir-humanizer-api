@@ -39,16 +39,15 @@ public class R4DosageController implements DosageController, DosageConversionSup
             description = "Convert dosage(s) into human readable-text into requested languages"
     )
     public Mono<DosageReponseDto> asHumanReadableText(
-            @Valid @RequestBody Mono<DosageRequestDto> requestDtoMono,
-            @RequestHeader(name = HttpHeaders.ACCEPT_LANGUAGE, required = false) String acceptLanguage
+            @Valid @RequestBody Mono<DosageRequestDto> requestDtoMono
     ) {
-        // Extract requested languages
-        List<Locale> locales = parseAcceptLanguageHeader(acceptLanguage);
-
         return requestDtoMono
                 .flatMap(requestDto -> {
                     // Extract parameters
                     var params = requestDto.getParams();
+
+                    // Extract requested languages
+                    var locales = params.getLocales();
 
                     // Extract dosages
                     var dosages = validateAndExtractDosages(
