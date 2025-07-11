@@ -3,8 +3,8 @@ package io.github.jy95.fds_services.controller;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
 import io.github.jy95.fds.r4.DosageAPIR4;
+import io.github.jy95.fds_services.dto.DosageReponseDto;
 import io.github.jy95.fds_services.dto.DosageRequestDto;
-import io.github.jy95.fds_services.dto.LocalizedDto;
 import io.github.jy95.fds_services.utility.DosageConversionSupport;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,7 +38,7 @@ public class R4DosageController implements DosageController, DosageConversionSup
             summary = "Turn dosage(s) into text",
             description = "Convert dosage(s) into human readable-text into requested languages"
     )
-    public Mono<List<LocalizedDto>> asHumanReadableText(
+    public Mono<DosageReponseDto> asHumanReadableText(
             @Valid @RequestBody Mono<DosageRequestDto> requestDtoMono,
             @RequestHeader(name = HttpHeaders.ACCEPT_LANGUAGE, required = false) String acceptLanguage
     ) {
@@ -71,7 +71,7 @@ public class R4DosageController implements DosageController, DosageConversionSup
                             )
                     );
 
-                    return translateDosagesToLocalizedText(
+                    return translateDosagesWithIssues(
                             dosages,
                             locales,
                             resolvers
