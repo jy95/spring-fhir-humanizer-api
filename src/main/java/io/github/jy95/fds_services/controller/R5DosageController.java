@@ -32,7 +32,7 @@ import reactor.core.publisher.Mono;
 public class R5DosageController implements DosageConversionSupport {
 
     /**
-     * The FHIR context for R4.
+     * The FHIR context for R5.
      */
     private static final IParser JSON_PARSER = FhirContext.forR5().newJsonParser();
 
