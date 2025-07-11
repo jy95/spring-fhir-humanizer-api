@@ -13,10 +13,10 @@
 	</parent>
 
 	<groupId>io.github.jy95.fds-services</groupId>
-	<artifactId>RootController</artifactId>
+	<artifactId>spring-fhir-humanizer-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>RootController</name>
-	<description>Microservice for FHIR Dosage Support</description>
+	<name>spring-fhir-humanizer-api</name>
+	<description>Spring Boot REST API that converts FHIR Dosage and Timing data into human-readable text, with support for internationalization and configurable output. Includes Swagger UI for interactive exploration.</description>
 
 	<properties>
 		<java.version>21</java.version>

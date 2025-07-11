@@ -2,7 +2,7 @@ package io.github.jy95.fds_services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.jy95.fds.common.types.DisplayOrder;
-import io.github.jy95.fds_services.controller.R4DosageController;
+import io.github.jy95.fds_services.controller.R5DosageController;
 import io.github.jy95.fds_services.dto.DosageRequestDto;
 import io.github.jy95.fds_services.dto.ParamsDto;
 import lombok.SneakyThrows;
@@ -19,8 +19,8 @@ import java.util.Locale;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@WebFluxTest(controllers = R4DosageController.class)
-class R4DosageControllerTest {
+@WebFluxTest(controllers = R5DosageController.class)
+class R5DosageControllerTest {
 
     @Autowired
     private WebTestClient webTestClient;
@@ -45,7 +45,7 @@ class R4DosageControllerTest {
         // Act & Assert
         webTestClient
                 .post()
-                .uri("/r4/dosage/asHumanReadableText")
+                .uri("/r5/dosage/asHumanReadableText")
                 .body(Mono.just(requestDto), DosageRequestDto.class)
                 .exchange()
                 .expectStatus().isOk()
@@ -71,7 +71,7 @@ class R4DosageControllerTest {
 
         webTestClient
                 .post()
-                .uri("/r4/dosage/asHumanReadableText")
+                .uri("/r5/dosage/asHumanReadableText")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .bodyValue(invalidJsonPayload)
                 .exchange()
@@ -136,7 +136,7 @@ class R4DosageControllerTest {
         // Act & Assert
         webTestClient
                 .post()
-                .uri("/r4/dosage/asHumanReadableText")
+                .uri("/r5/dosage/asHumanReadableText")
                 .body(Mono.just(requestDto), DosageRequestDto.class)
                 .exchange()
                 .expectStatus().isOk()
