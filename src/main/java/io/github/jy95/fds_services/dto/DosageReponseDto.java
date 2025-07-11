@@ -16,7 +16,7 @@ public class DosageReponseDto {
 
     // Result
     @Builder.Default
-    List<LocalizedStringDto> items = List.of();
+    List<LocalizedDto> items = List.of();
 
     // List of issues in the payload
     @Builder.Default

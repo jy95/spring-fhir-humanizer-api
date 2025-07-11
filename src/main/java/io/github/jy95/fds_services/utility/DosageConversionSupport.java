@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.jy95.fds.common.types.DosageAPI;
-import io.github.jy95.fds_services.dto.LocalizedStringDto;
+import io.github.jy95.fds_services.dto.LocalizedDto;
 import io.github.jy95.fds_services.enum_.OutputFormat;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -75,7 +75,7 @@ public interface DosageConversionSupport {
                 );
     }
 
-    default <D> Mono<List<LocalizedStringDto>> translateDosagesToLocalizedText(
+    default <D> Mono<List<LocalizedDto>> translateDosagesToLocalizedText(
             List<List<D>> dosages,
             List<Locale> locales,
             Map<Locale, ? extends DosageAPI<?, D>> resolvers
@@ -98,7 +98,7 @@ public interface DosageConversionSupport {
                                             });
                                 })
                                 .collectMap(Map.Entry::getKey, Map.Entry::getValue)
-                                .map(translationsMap -> LocalizedStringDto
+                                .map(translationsMap -> LocalizedDto
                                         .builder()
                                         .translations(translationsMap)
                                         .build()
