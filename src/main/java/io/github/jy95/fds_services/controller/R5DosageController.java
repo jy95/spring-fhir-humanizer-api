@@ -34,7 +34,7 @@ public class R5DosageController implements DosageConversionSupport {
     /**
      * The FHIR context for R4.
      */
-    private static final IParser JSON_PARSER = FhirContext.forR4().newJsonParser();
+    private static final IParser JSON_PARSER = FhirContext.forR5().newJsonParser();
 
     @PostMapping(
             value = "/asHumanReadableText",
