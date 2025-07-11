@@ -1,8 +1,14 @@
 package io.github.jy95.fds_services.enum_;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(
+        description = "Format options for dosage output rendering."
+)
 public enum OutputFormat {
-    // Concatenate all dosages into a single String
+    @Schema(description = "Concatenate all dosages into a single String.")
     SUMMARY,
-    // One String per dosage entry
+
+    @Schema(description = "Generate one String per dosage entry.")
     DETAILED
 }
