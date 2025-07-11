@@ -2,25 +2,31 @@ package io.github.jy95.fds_services.dto;
 
 // https://www.belgif.be/specification/rest/api-guide/#multi-language-descriptions
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Singular;
+import lombok.Value;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+import java.util.Map;
+
+/**
+ * An immutable DTO representing localized values using ISO 639 language codes.
+ * Serialized as a flat object like: { "en": "Hello", "fr": "Bonjour" }
+ */
+@Value
+@Builder(toBuilder = true)
 public class LocalizedStringDto {
-    // English translation
-    private String en;
 
-    // French translation
-    private String fr;
+    @Singular("entry")
+    Map<String, String> translations;
 
-    // Dutch translation
-    private String nl;
+    @JsonAnyGetter
+    public Map<String, String> flatten() {
+        return translations;
+    }
 
-    // German translation
-    private String de;
+    public String get(String langCode) {
+        return translations.get(langCode);
+    }
 }
+

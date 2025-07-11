@@ -13,7 +13,6 @@ import org.springframework.web.server.ServerWebExchange;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 @Order  // optional: can specify precedence if needed
@@ -24,11 +23,22 @@ public class BelgifErrorHandler {
     public ProblemDetail handleValidationExceptions(WebExchangeBindException ex, ServerWebExchange exchange) {
         BelgifProblemType type = BelgifProblemType.BAD_REQUEST;
 
-        List<String> details = ex.getFieldErrors().stream()
-                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+        var problem = buildProblemDetail(type, ex.getMessage(), exchange);
+        var issues = ex
+                .getFieldErrors()
+                .stream()
+                .map(fieldError -> {
+                    var issue = ProblemDetail.forStatus(400);
+                    issue.setType(URI.create("urn:problem-type:belgif:input-validation:invalidInput"));
+                    issue.setDetail(fieldError.getDefaultMessage());
+                    issue.setProperty("in", "body");
+                    issue.setProperty("name", fieldError.getField());
+                    return issue;
+                })
                 .toList();
 
-        return buildProblemDetail(type, String.join("; ", details), exchange);
+        problem.setProperty("issues", issues);
+        return problem;
     }
 
     @ExceptionHandler(ResponseStatusException.class)
