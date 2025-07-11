@@ -2,10 +2,12 @@ package io.github.jy95.fds_services.exception;
 
 import io.github.jy95.fds_services.enum_.BelgifProblemType;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
@@ -19,6 +21,7 @@ import java.util.UUID;
 @ControllerAdvice
 public class BelgifErrorHandler {
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(WebExchangeBindException.class)
     public ProblemDetail handleValidationExceptions(WebExchangeBindException ex, ServerWebExchange exchange) {
         BelgifProblemType type = BelgifProblemType.BAD_REQUEST;
@@ -48,6 +51,7 @@ public class BelgifErrorHandler {
         return buildProblemDetail(type, detail, exchange);
     }
 
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleGenericException(Exception ex, ServerWebExchange exchange) {
         BelgifProblemType type = BelgifProblemType.INTERNAL_SERVER_ERROR;
