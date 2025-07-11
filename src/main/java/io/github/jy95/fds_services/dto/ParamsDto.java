@@ -34,7 +34,7 @@ public class ParamsDto {
             description = "List of locale codes (BCP 47 format) used to localize the dosage text output",
             example = "[\"en\", \"fr\"]",
             allowableValues = {"en", "fr", "nl", "de"},
-            defaultValue = "en"
+            defaultValue = "[\"en\"]"
     )
     @Builder.Default
     private List<Locale> locales = DEFAULT_LOCALES;
@@ -44,9 +44,9 @@ public class ParamsDto {
             externalDocs = @ExternalDocumentation(
                     description = "Javadoc",
                     url = "https://jy95.github.io/fds/common/apidocs/io/github/jy95/fds/common/types/DisplayOrder.html"
-            )
+            ),
+            example = "[\"BOUNDS_DURATION\"]"
     )
-
     @Builder.Default
     private List<DisplayOrder> displayOrders = DEFAULT_DISPLAY_ORDER;
 
