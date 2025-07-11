@@ -1,4 +1,4 @@
-# spring-fhir-humanizer-api
+# spring-fhir-humanizer-api [![Codacy Badge](https://app.codacy.com/project/badge/Grade/8ceab67e761147f398a3df72d1e0b741)](https://app.codacy.com/gh/jy95/spring-fhir-humanizer-api/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/8ceab67e761147f398a3df72d1e0b741)](https://app.codacy.com/gh/jy95/spring-fhir-humanizer-api/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 
 **spring-fhir-humanizer-api** is a Spring Boot REST API powered by [FDS](https://github.com/jy95/fds) that converts 
 * FHIR R4 [`Dosage`](https://hl7.org/fhir/R4/dosage.html) and [`Timing`](https://hl7.org/fhir/R4/datatypes.html#timing) elements 
