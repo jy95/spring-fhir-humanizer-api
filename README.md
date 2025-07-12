@@ -6,6 +6,14 @@
 
 into **human-readable text** — in your desired language and with customizable formatting & more.
 
+## 🚀 Demo
+
+- Swagger UI : https://spring-fhir-humanizer-api.onrender.com/swagger-ui/index.html 
+- OpenAPI : https://spring-fhir-humanizer-api.onrender.com/v3/api-docs 
+- API : https://spring-fhir-humanizer-api.onrender.com
+
+> ⚠️ **Note:** This instance is hosted on [Render](https://render.com), which puts inactive web services to sleep. The first request after a period of inactivity may take **up to 50 seconds** to respond.
+
 ## ✨ Features
 
 - 📝 Converts FHIR **Dosage** and **Timing** elements to plain-language descriptions
@@ -33,3 +41,19 @@ git clone https://github.com/your-org/spring-fhir-humanizer-api.git
 cd spring-fhir-humanizer-api
 ./mvnw spring-boot:run
 ```
+
+## Credits
+
+Special thanks to : 
+- [The Java library which this webservice uses](https://github.com/jy95/fds)
+- Render.com for the free plan hosting
+
+## Contributors
+
+<a href="https://github.com/jy95/spring-fhir-humanizer-api/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=jy95/spring-fhir-humanizer-api" alt="Contributors" />
+</a>
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=jy95/spring-fhir-humanizer-api&type=Date)](https://star-history.com/#jy95/spring-fhir-humanizer-api&Date)
