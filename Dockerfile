@@ -1,5 +1,5 @@
 # Use a lightweight OpenJDK 21 image based on Alpine Linux
-FROM openjdk:21-jdk-alpine
+FROM eclipse-temurin:21-jdk-alpine
 
 # Set the working directory in the container
 WORKDIR /app
