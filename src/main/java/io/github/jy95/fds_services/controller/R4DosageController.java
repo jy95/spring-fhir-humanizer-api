@@ -61,6 +61,8 @@ public class R4DosageController implements DosageConversionSupport {
                 (locale, paramsDto) -> new DosageAPIR4(
                         defaultConfig
                                 .locale(locale)
+                                .displayOrder(paramsDto.getDisplayOrders())
+                                .displaySeparator(paramsDto.getDisplaySeparator())
                                 .build()
                 );
 
