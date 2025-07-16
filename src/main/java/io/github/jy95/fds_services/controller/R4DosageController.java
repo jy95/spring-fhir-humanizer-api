@@ -108,6 +108,7 @@ public class R4DosageController implements DosageConversionSupport {
                                     (locale, paramsDto) -> new DosageAPIR4(
                                             FDSConfigR4
                                                     .builder()
+                                                    .locale(locale)
                                                     .displayOrder(params.getDisplayOrders())
                                                     .displaySeparator(params.getDisplaySeparator())
                                                     .build()
