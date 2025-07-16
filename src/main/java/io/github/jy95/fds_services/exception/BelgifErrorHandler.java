@@ -1,5 +1,7 @@
 package io.github.jy95.fds_services.exception;
 
+import io.github.jy95.fds_services.enum_.BelgifInputValidation;
+import io.github.jy95.fds_services.enum_.BelgifIssueLocation;
 import io.github.jy95.fds_services.enum_.BelgifProblemType;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -32,9 +34,9 @@ public class BelgifErrorHandler {
                 .stream()
                 .map(fieldError -> {
                     var issue = ProblemDetail.forStatus(400);
-                    issue.setType(URI.create("urn:problem-type:belgif:input-validation:invalidInput"));
+                    issue.setType(BelgifInputValidation.INVALID_INPUT.getType());
                     issue.setDetail(fieldError.getDefaultMessage());
-                    issue.setProperty("in", "body");
+                    issue.setProperty("in", BelgifIssueLocation.BODY.getIn());
                     issue.setProperty("name", fieldError.getField());
                     return issue;
                 })
