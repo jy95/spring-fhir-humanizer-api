@@ -1,10 +1,11 @@
 package io.github.jy95.fds_services.controller;
 
 import io.github.jy95.fds_services.dto.HealthResponseDto;
-import io.github.jy95.fds_services.enum_.HealthStatus;
+import io.github.jy95.fds_services.service.HealthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,9 @@ import reactor.core.publisher.Mono;
         name = "Miscellaneous"
 )
 public class HealthController {
+
+    @Autowired
+    HealthService healthService;
 
     @GetMapping(
             produces = MediaType.APPLICATION_JSON_VALUE
@@ -36,7 +40,8 @@ public class HealthController {
             }
     )
     public Mono<ResponseEntity<HealthResponseDto>> health() {
-        return checkSystemHealth()
+        return healthService
+                .checkSystemHealth()
                 .map(status -> {
                     HttpStatus httpStatus = switch (status) {
                         case DOWN -> HttpStatus.SERVICE_UNAVAILABLE;
@@ -52,10 +57,5 @@ public class HealthController {
                                             .build()
                             );
                 });
-    }
-
-    private Mono<HealthStatus> checkSystemHealth() {
-        // Whatever logic, with real checks (DB, external service, etc.)
-        return Mono.just(HealthStatus.UP);
     }
 }
