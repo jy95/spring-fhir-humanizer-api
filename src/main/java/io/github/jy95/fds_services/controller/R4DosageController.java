@@ -5,6 +5,8 @@ import ca.uhn.fhir.parser.IParser;
 import io.github.jy95.fds.r4.DosageAPIR4;
 import io.github.jy95.fds_services.dto.DosageResponseDto;
 import io.github.jy95.fds_services.dto.DosageRequestDto;
+import io.github.jy95.fds_services.dto.ParamsDto;
+import io.github.jy95.fds_services.utility.DosageAPICache;
 import io.github.jy95.fds_services.utility.DosageConversionSupport;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,6 +18,10 @@ import reactor.core.publisher.Mono;
 
 import io.github.jy95.fds.r4.config.FDSConfigR4;
 import org.hl7.fhir.r4.model.MedicationRequest;
+
+import java.util.List;
+import java.util.Locale;
+import java.util.function.BiFunction;
 
 @RestController
 @RequestMapping("/r4/dosage")
@@ -30,9 +36,40 @@ import org.hl7.fhir.r4.model.MedicationRequest;
 public class R4DosageController implements DosageConversionSupport {
 
     /**
+     * The shared cache, for reusable requests
+     */
+    private static final DosageAPICache<ParamsDto, DosageAPIR4> cache = DosageAPICache
+            .<ParamsDto, DosageAPIR4>builder()
+            .keyExtractor(paramsDto -> List
+                    .of(
+                            paramsDto.getDisplaySeparator(),
+                            paramsDto.getDisplayOrders()
+                    )
+            )
+            .build();
+
+    /**
      * The FHIR context for R4.
      */
     private static final IParser JSON_PARSER = FhirContext.forR4().newJsonParser();
+
+    static {
+        // Prepare utility for setup
+        var defaultParams = ParamsDto.builder().build();
+        var defaultConfig = FDSConfigR4.builder();
+        BiFunction<Locale, ParamsDto, DosageAPIR4> creator =
+                (locale, paramsDto) -> new DosageAPIR4(
+                        defaultConfig
+                                .locale(locale)
+                                .build()
+                );
+
+        // Set up the cache with default instances
+        cache.getOrCreate(Locale.ENGLISH, defaultParams, creator);
+        cache.getOrCreate(Locale.FRENCH, defaultParams, creator);
+        cache.getOrCreate(Locale.GERMAN, defaultParams, creator);
+        cache.getOrCreate(Locale.forLanguageTag("nl"), defaultParams, creator);
+    }
 
     @PostMapping(
             value = "/asHumanReadableText",
@@ -64,17 +101,18 @@ public class R4DosageController implements DosageConversionSupport {
                     );
 
                     // Create resolvers
-                    var resolvers = createResolversForLocales(
-                            locales,
-                            locale -> new DosageAPIR4(
-                                    FDSConfigR4
-                                            .builder()
-                                            .locale(locale)
-                                            .displayOrder(params.getDisplayOrders())
-                                            .displaySeparator(params.getDisplaySeparator())
-                                            .build()
-                            )
-                    );
+                    var resolvers = cache
+                            .getResolversForLocalesWithParam(
+                                    locales,
+                                    params,
+                                    (locale, paramsDto) -> new DosageAPIR4(
+                                            FDSConfigR4
+                                                    .builder()
+                                                    .displayOrder(params.getDisplayOrders())
+                                                    .displaySeparator(params.getDisplaySeparator())
+                                                    .build()
+                                    )
+                            );
 
                     return translateDosagesWithIssues(
                             dosages,
