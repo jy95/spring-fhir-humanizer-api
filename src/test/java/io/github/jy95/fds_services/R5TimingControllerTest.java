@@ -44,15 +44,13 @@ class R5TimingControllerTest {
         boundsDuration.put("system", "http://hl7.org/fhir/ValueSet/duration-units");
         repeatNode.set("boundsDuration", boundsDuration);
 
-        var timingArray = mapper.createArrayNode();
-        timingArray.add(
-                mapper
-                        .createObjectNode()
-                        .set(
-                                "repeat",
-                                repeatNode
-                        )
-        );
+        var timingNode = mapper
+                .createObjectNode()
+                .set(
+                        "repeat",
+                        repeatNode
+                );
+        var timingArray = List.of(timingNode);
         var requestDto = TimingRequestDto
                 .builder()
                 .timings(timingArray)
@@ -136,15 +134,13 @@ class R5TimingControllerTest {
         boundsDuration.put("system", "http://hl7.org/fhir/ValueSet/duration-units");
         repeatNode.set("boundsDuration", boundsDuration);
 
-        var timingArray = mapper.createArrayNode();
-        timingArray.add(
-                mapper
-                        .createObjectNode()
-                        .set(
-                                "repeat",
-                                repeatNode
-                        )
-        );
+        var timingNode = mapper
+                .createObjectNode()
+                .set(
+                        "repeat",
+                        repeatNode
+                );
+        var timingArray = List.of(timingNode);
         var requestDto = TimingRequestDto
                 .builder()
                 .params(paramsDto)

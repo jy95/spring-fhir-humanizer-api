@@ -1,5 +1,6 @@
 package io.github.jy95.fds_services;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.jy95.fds.common.types.DisplayOrder;
 import io.github.jy95.fds_services.controller.R4DosageController;
@@ -33,10 +34,10 @@ class R4DosageControllerTest {
         // Prepare data
         ParamsDto paramsDto = new ParamsDto();
         paramsDto.setDisplayOrders(List.of(DisplayOrder.TEXT));
-        var dosageArray = mapper.createArrayNode();
-        dosageArray.add(mapper.createObjectNode()
-                .put("text", "Free text posology")
-        );
+        JsonNode dosageNode = mapper
+                .createObjectNode()
+                .put("text", "Free text posology");
+        var dosageArray = List.of(dosageNode);
         var requestDto = DosageRequestDto.builder()
                 .dosages(dosageArray)
                 .params(paramsDto)
@@ -84,7 +85,6 @@ class R4DosageControllerTest {
                 .jsonPath("$.status").isEqualTo(400)
                 .jsonPath("$.href").isEqualTo("https://www.belgif.be/specification/rest/api-guide/problems/badRequest.html")
                 .jsonPath("$.timestamp").exists()
-                //.jsonPath("$.issues").isArray()
                 .jsonPath("$.instance").exists();
     }
 
@@ -125,8 +125,7 @@ class R4DosageControllerTest {
 
         // Parse a single dosage object and put it inside an ArrayNode
         var dosageNode = mapper.readTree(singleDosageJson);
-        var dosageArray = mapper.createArrayNode();
-        dosageArray.add(dosageNode);
+        var dosageArray = List.of(dosageNode);
 
         var requestDto = DosageRequestDto.builder()
                 .dosages(dosageArray)

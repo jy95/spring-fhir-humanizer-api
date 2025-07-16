@@ -1,11 +1,14 @@
 package io.github.jy95.fds_services.dto;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -36,7 +39,8 @@ public class TimingRequestDto {
         ]
         """
     )
-    private ArrayNode timings;
+    @NotNull
+    private List<JsonNode> timings;
 
     @Builder.Default
     @Schema(

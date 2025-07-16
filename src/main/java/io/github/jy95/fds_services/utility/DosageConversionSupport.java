@@ -41,19 +41,18 @@ public interface DosageConversionSupport {
      * @throws IllegalArgumentException if the input is invalid or parsing fails.
      */
     default <T extends IBase> List<List<T>> validateAndExtractDosages(
-            JsonNode dosageArray,
+            List<JsonNode> dosageArray,
             IParser parser,
             Class<? extends IBaseResource> wrapperClass,
             Function<IBaseResource, List<T>> extractFunction,
             OutputFormat outputFormat
     ) {
-        if (dosageArray == null || !dosageArray.isArray()) {
-            throw new IllegalArgumentException("Missing 'dosages' array");
-        }
 
         try {
             ObjectNode workingObj = MAPPER.createObjectNode();
-            workingObj.set("dosageInstruction", dosageArray);
+            var workingArr = MAPPER.createArrayNode();
+            workingArr.addAll(dosageArray);
+            workingObj.set("dosageInstruction", workingArr);
             workingObj.put("resourceType", "MedicationRequest");
 
             String json = MAPPER.writeValueAsString(workingObj);

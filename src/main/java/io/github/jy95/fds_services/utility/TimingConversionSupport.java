@@ -22,18 +22,15 @@ public interface TimingConversionSupport {
 
     // From a JSON payload to FHIR Dosage object
     default <T extends IBase> List<List<T>> validateAndExtractTiming(
-            ArrayNode timingArray,
+            List<JsonNode> timingArray,
             IParser parser,
             Class<? extends IBaseResource> wrapperClass,
             Function<IBaseResource, List<T>> extractFunction,
             OutputFormat outputFormat
     ) {
-        if (timingArray == null || !timingArray.isArray()) {
-            throw new IllegalArgumentException("Missing 'timing' array");
-        }
 
         var dosageList = timingArray
-                .valueStream()
+                .stream()
                 .map(timingNode -> parseTimingNodeToDosageList(timingNode, parser, wrapperClass, extractFunction))
                 .toList();
 
