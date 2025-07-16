@@ -1,6 +1,7 @@
 package io.github.jy95.fds_services.utility;
 
 import io.github.jy95.fds.common.types.DosageAPI;
+import io.vavr.Tuple2;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -26,7 +28,7 @@ public class DosageAPICache<P, V> {
 
     // The cache
     @Builder.Default
-    private Map<Locale, Map<List<Object>, V>> cache = new HashMap<>();
+    private Map<Tuple2<Locale, ?>, V> cache = new ConcurrentHashMap<>();
 
     // To specific a custom key for storage
     @Builder.Default
@@ -34,9 +36,8 @@ public class DosageAPICache<P, V> {
 
     public V getOrCreate(Locale locale, P params, BiFunction<Locale, P, V> creator) {
         var key = keyExtractor.apply(params);
-        return cache
-                .computeIfAbsent(locale, l -> new HashMap<>())
-                .computeIfAbsent(key, p -> creator.apply(locale, params));
+        var compositeKey = new Tuple2<>(locale, key);
+        return cache.computeIfAbsent(compositeKey, k -> creator.apply(locale, params));
     }
 
     public Map<Locale, V> getResolversForLocalesWithParam(
