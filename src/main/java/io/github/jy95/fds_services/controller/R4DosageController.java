@@ -111,8 +111,8 @@ public class R4DosageController implements DosageConversionSupport {
                                             FDSConfigR4
                                                     .builder()
                                                     .locale(locale)
-                                                    .displayOrder(params.getDisplayOrders())
-                                                    .displaySeparator(params.getDisplaySeparator())
+                                                    .displayOrder(paramsDto.getDisplayOrders())
+                                                    .displaySeparator(paramsDto.getDisplaySeparator())
                                                     .build()
                                     )
                             );
