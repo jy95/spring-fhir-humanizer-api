@@ -14,7 +14,7 @@ import java.util.Locale;
 public class DosageAPICacheR5Impl implements DosageAPICache<ParamsDto, DosageAPIR5> {
 
     @Override
-    @Cacheable(cacheNames = "dosageApiCacheR5", key = "T(this).buildKey(#locale, #params)")
+    @Cacheable(cacheNames = "dosageApiCacheR5", keyGenerator = "dosageApiKeyGenerator")
     public DosageAPIR5 getCreator(Locale locale, ParamsDto params) {
         return new DosageAPIR5(
                 FDSConfigR5
