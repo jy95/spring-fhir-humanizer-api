@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.jy95.fds.common.types.DisplayOrder;
 import io.github.jy95.fds_services.dto.DosageRequestDto;
 import io.github.jy95.fds_services.dto.ParamsDto;
+import io.github.jy95.fds_services.enum_.OutputFormat;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -186,6 +187,65 @@ class R5DosageControllerTest {
                 )
                 .jsonPath("$.items[0].translations.de").value(
                         (String actual) -> assertThat(actual).isEqualToNormalizingWhitespace("2 Mal jede Tag - 30 Minuten vor den Mahlzeiten - für 10 Tage")
+                );
+
+    }
+
+    @SneakyThrows
+    @Test
+    void testAsHumanReadableText_customParams() {
+
+        // Prepare data
+        ParamsDto paramsDto = new ParamsDto();
+        paramsDto.setDisplaySeparator(" | ");
+        paramsDto.setOutputFormat(OutputFormat.DETAILED);
+
+        // Raw JSON for a single dosage object
+        String singleDosageJson = """
+        {
+          "timing": {
+            "repeat": {
+              "frequency": 2,
+              "period": 1,
+              "periodUnit": "d",
+              "when": ["AC"],
+              "offset": 30,
+              "boundsDuration": {
+                "value": 10,
+                "code": "d",
+                "system": "http://hl7.org/fhir/ValueSet/duration-units"
+              }
+            }
+          }
+        }
+        """;
+
+        // Parse a single dosage object and put it inside an ArrayNode
+        var dosageNode = mapper.readTree(singleDosageJson);
+        var dosageArray = List.of(dosageNode);
+
+        var requestDto = DosageRequestDto.builder()
+                .dosages(dosageArray)
+                .params(paramsDto)
+                .build();
+
+        // Act & Assert
+        webTestClient
+                .post()
+                .uri("/r5/dosage/asHumanReadableText")
+                .body(Mono.just(requestDto), DosageRequestDto.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentTypeCompatibleWith(MediaType.APPLICATION_JSON)
+                .expectHeader().exists("BelGov-Trace-Id")
+                .expectBody()
+                .jsonPath("$.issues").isArray()
+                .jsonPath("$.issues.length()").isEqualTo(0)
+                .jsonPath("$.items").isArray()
+                .jsonPath("$.items.length()").isEqualTo(1)
+                .jsonPath("$.items[0].translations").exists()
+                .jsonPath("$.items[0].translations.en").value(
+                        (String actual) -> assertThat(actual).isEqualToNormalizingWhitespace("2 times every day | 30 minutes before meal | for 10 days")
                 );
 
     }
