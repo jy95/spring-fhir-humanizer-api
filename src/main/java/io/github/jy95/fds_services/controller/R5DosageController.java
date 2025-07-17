@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/r5/dosage")
 @Tag(
@@ -72,8 +75,14 @@ public class R5DosageController implements DosageConversionSupport {
                     );
 
                     // Create resolvers
-                    var resolvers = cache
-                            .getResolversForLocalesWithParam(locales, params);
+                    var resolvers = locales
+                            .stream()
+                            .distinct()
+                            .map(locale -> Map.entry(locale, cache.getCreator(locale, params)))
+                            .collect(Collectors.toMap(
+                                    Map.Entry::getKey,
+                                    Map.Entry::getValue
+                            ));
 
                     return translateDosagesWithIssues(
                             dosages,

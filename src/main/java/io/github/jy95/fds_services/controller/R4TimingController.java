@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/r4/timing")
 @Tag(
@@ -73,8 +76,14 @@ public class R4TimingController implements DosageConversionSupport, TimingConver
                     );
 
                     // Create resolvers
-                    var resolvers = cache
-                            .getResolversForLocalesWithParam(locales, params);
+                    var resolvers = locales
+                            .stream()
+                            .distinct()
+                            .map(locale -> Map.entry(locale, cache.getCreator(locale, params)))
+                            .collect(Collectors.toMap(
+                                    Map.Entry::getKey,
+                                    Map.Entry::getValue
+                            ));
 
                     return translateDosagesWithIssues(
                             dosages,

@@ -17,6 +17,9 @@ import reactor.core.publisher.Mono;
 
 import org.hl7.fhir.r4.model.MedicationRequest;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/r4/dosage")
 @Tag(
@@ -70,10 +73,14 @@ public class R4DosageController implements DosageConversionSupport {
                     );
 
                     // Get resolvers
-                    var resolvers = cache.getResolversForLocalesWithParam(
-                            locales,
-                            params
-                    );
+                    var resolvers = locales
+                            .stream()
+                            .distinct()
+                            .map(locale -> Map.entry(locale, cache.getCreator(locale, params)))
+                            .collect(Collectors.toMap(
+                                    Map.Entry::getKey,
+                                    Map.Entry::getValue
+                            ));
 
                     return translateDosagesWithIssues(
                             dosages,
