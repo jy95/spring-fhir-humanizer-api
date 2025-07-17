@@ -26,14 +26,6 @@ public class DosageAPICacheR4Impl implements DosageAPICache<ParamsDto, DosageAPI
         );
     }
 
-    @Override
-    public List<Object> getKey(ParamsDto paramsDto) {
-        return List.of(
-                paramsDto.getDisplaySeparator(),
-                paramsDto.getDisplayOrders()
-        );
-    }
-
     @PostConstruct
     public void preloadDefaults() {
 
