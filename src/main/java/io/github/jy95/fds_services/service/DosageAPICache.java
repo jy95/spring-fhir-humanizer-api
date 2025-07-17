@@ -19,12 +19,16 @@ public interface DosageAPICache<P, V> {
      * Constructs a unique cache key from locale and key-extracted param subset.
      */
     default String buildKey(Locale locale, P params) {
-        var subKey = getKey(params).hashCode();
+        var keyComponents = getKey(params);
+        var subKey = keyComponents
+                .stream()
+                .map(Object::toString)
+                .collect(Collectors.joining("_"));
         return String
                 .join(
                         "::",
                         locale.toLanguageTag(),
-                        String.valueOf(subKey)
+                        subKey
                 );
     }
 
