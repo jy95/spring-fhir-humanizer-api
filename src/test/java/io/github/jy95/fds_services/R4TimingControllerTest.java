@@ -1,14 +1,13 @@
 package io.github.jy95.fds_services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.jy95.fds.common.types.DisplayOrder;
-import io.github.jy95.fds_services.controller.R4TimingController;
 import io.github.jy95.fds_services.dto.TimingRequestDto;
 import io.github.jy95.fds_services.dto.ParamsDto;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -19,7 +18,8 @@ import java.util.Locale;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@WebFluxTest(controllers = R4TimingController.class)
+@SpringBootTest
+@AutoConfigureWebTestClient
 class R4TimingControllerTest {
 
     @Autowired

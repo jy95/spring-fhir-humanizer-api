@@ -2,20 +2,23 @@ package io.github.jy95.fds_services.controller;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
-import io.github.jy95.fds.r4.DosageAPIR4;
 import io.github.jy95.fds_services.dto.DosageResponseDto;
 import io.github.jy95.fds_services.dto.DosageRequestDto;
+import io.github.jy95.fds_services.service.DosageAPICacheR4Impl;
 import io.github.jy95.fds_services.utility.DosageConversionSupport;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-import io.github.jy95.fds.r4.config.FDSConfigR4;
 import org.hl7.fhir.r4.model.MedicationRequest;
+
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/r4/dosage")
@@ -28,6 +31,12 @@ import org.hl7.fhir.r4.model.MedicationRequest;
         )
 )
 public class R4DosageController implements DosageConversionSupport {
+
+    /**
+     * The shared cache, for reusable requests
+     */
+    @Autowired
+    private DosageAPICacheR4Impl cache;
 
     /**
      * The FHIR context for R4.
@@ -63,18 +72,15 @@ public class R4DosageController implements DosageConversionSupport {
                             params.getOutputFormat()
                     );
 
-                    // Create resolvers
-                    var resolvers = createResolversForLocales(
-                            locales,
-                            locale -> new DosageAPIR4(
-                                    FDSConfigR4
-                                            .builder()
-                                            .locale(locale)
-                                            .displayOrder(params.getDisplayOrders())
-                                            .displaySeparator(params.getDisplaySeparator())
-                                            .build()
-                            )
-                    );
+                    // Get resolvers
+                    var resolvers = locales
+                            .stream()
+                            .distinct()
+                            .map(locale -> Map.entry(locale, cache.getCreator(locale, params)))
+                            .collect(Collectors.toMap(
+                                    Map.Entry::getKey,
+                                    Map.Entry::getValue
+                            ));
 
                     return translateDosagesWithIssues(
                             dosages,
