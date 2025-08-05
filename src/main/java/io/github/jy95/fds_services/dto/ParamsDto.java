@@ -1,14 +1,17 @@
 package io.github.jy95.fds_services.dto;
 
+import io.github.jy95.fds.common.config.FDSConfig;
 import io.github.jy95.fds.common.types.DisplayOrder;
 import io.github.jy95.fds_services.enum_.OutputFormat;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Locale;
-import io.github.jy95.fds.common.config.FDSConfig;
 
 /**
  * Parameters controlling the display and output format of dosage text conversion.

@@ -8,15 +8,18 @@ import io.github.jy95.fds.common.types.DosageAPI;
 import io.github.jy95.fds_services.dto.DosageResponseDto;
 import io.github.jy95.fds_services.dto.LocalizedDto;
 import io.github.jy95.fds_services.enum_.OutputFormat;
+import io.vavr.control.Either;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.springframework.http.ProblemDetail;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import io.vavr.control.Either;
 
 import java.net.URI;
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 

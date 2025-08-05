@@ -1,5 +1,7 @@
 package io.github.jy95.fds_services.enum_;
-import lombok.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @Getter
 @AllArgsConstructor

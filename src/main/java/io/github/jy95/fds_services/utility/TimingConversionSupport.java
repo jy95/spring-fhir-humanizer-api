@@ -1,10 +1,8 @@
 package io.github.jy95.fds_services.utility;
 
 import ca.uhn.fhir.parser.IParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.jy95.fds_services.enum_.OutputFormat;
 import org.hl7.fhir.instance.model.api.IBase;
