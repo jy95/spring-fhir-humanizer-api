@@ -63,7 +63,7 @@
 		<dependency>
 			<groupId>io.github.jy95.fds</groupId>
 			<artifactId>r4</artifactId>
-			<version>1.0.6</version>
+			<version>2.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.github.jy95.fds</groupId>
