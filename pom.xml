@@ -20,7 +20,7 @@
 
 	<properties>
 		<java.version>21</java.version>
-		<fds.version>2.1.1</fds.version>
+		<fds.version>2.1.2</fds.version>
 	</properties>
 
 	<dependencies>
