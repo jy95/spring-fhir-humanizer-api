@@ -36,7 +36,7 @@ public class ParamsDto {
     @Schema(
             description = "List of locale codes (BCP 47 format) used to localize the text output",
             example = "[\"en\", \"fr\"]",
-            allowableValues = {"en", "fr", "nl", "de"},
+            allowableValues = {"en", "fr", "nl", "de", "es", "it", "pt"},
             defaultValue = "[\"en\"]"
     )
     @Builder.Default
