@@ -1,12 +1,12 @@
 package io.github.jy95.fds_services.utility;
 
 import ca.uhn.fhir.parser.IParser;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.jy95.fds_services.enum_.OutputFormat;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.ObjectNode;
 
 import java.util.List;
 import java.util.function.Function;
@@ -14,9 +14,9 @@ import java.util.function.Function;
 public interface TimingConversionSupport {
 
     /**
-     * The ObjectMapper for JSON parsing.
+     * The JsonMapper for JSON parsing.
      */
-    ObjectMapper MAPPER = new ObjectMapper();
+    JsonMapper MAPPER = JsonMapper.builder().build();
 
     // From a JSON payload to FHIR Dosage object
     default <T extends IBase> List<List<T>> validateAndExtractTiming(
