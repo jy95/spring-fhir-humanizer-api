@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
+import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
@@ -51,7 +52,7 @@ class R4TimingControllerTest {
                         "repeat",
                         repeatNode
                 );
-        var timingArray = List.of(timingNode);
+        var timingArray = List.<JsonNode>of(timingNode);
         var requestDto = TimingRequestDto
                 .builder()
                 .timings(timingArray)
@@ -167,7 +168,7 @@ class R4TimingControllerTest {
                         "repeat",
                         repeatNode
                 );
-        var timingArray = List.of(timingNode);
+        var timingArray = List.<JsonNode>of(timingNode);
         var requestDto = TimingRequestDto
                 .builder()
                 .params(paramsDto)
