@@ -1,17 +1,18 @@
 package io.github.jy95.fds_services;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.jy95.fds_services.dto.ParamsDto;
 import io.github.jy95.fds_services.dto.TimingRequestDto;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
 import java.util.Locale;
@@ -25,7 +26,7 @@ class R5TimingControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final JsonMapper mapper = JsonMapper.builder().build();
 
     @Test
     void testAsHumanReadableText_basicExample() {
@@ -51,7 +52,7 @@ class R5TimingControllerTest {
                         "repeat",
                         repeatNode
                 );
-        var timingArray = List.of(timingNode);
+        var timingArray = List.<JsonNode>of(timingNode);
         var requestDto = TimingRequestDto
                 .builder()
                 .timings(timingArray)
@@ -167,7 +168,7 @@ class R5TimingControllerTest {
                         "repeat",
                         repeatNode
                 );
-        var timingArray = List.of(timingNode);
+        var timingArray = List.<JsonNode>of(timingNode);
         var requestDto = TimingRequestDto
                 .builder()
                 .params(paramsDto)
