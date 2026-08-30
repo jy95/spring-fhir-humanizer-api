@@ -1,7 +1,5 @@
 package io.github.jy95.fds_services;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.jy95.fds.common.types.DisplayOrder;
 import io.github.jy95.fds_services.dto.DosageRequestDto;
 import io.github.jy95.fds_services.dto.ParamsDto;
@@ -15,6 +13,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
 import java.util.Locale;
@@ -28,7 +28,7 @@ class R4DosageControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final JsonMapper mapper = JsonMapper.builder().build();
 
     @Test
     void testAsHumanReadableText_basicExample() {

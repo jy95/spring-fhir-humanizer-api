@@ -1,9 +1,6 @@
 package io.github.jy95.fds_services.utility;
 
 import ca.uhn.fhir.parser.IParser;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.jy95.fds.common.types.DosageAPI;
 import io.github.jy95.fds_services.dto.DosageResponseDto;
 import io.github.jy95.fds_services.dto.LocalizedDto;
@@ -14,6 +11,9 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.springframework.http.ProblemDetail;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.ObjectNode;
 
 import java.net.URI;
 import java.util.AbstractMap;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  */
 public interface DosageConversionSupport {
 
-    ObjectMapper MAPPER = new ObjectMapper();
+    JsonMapper MAPPER = JsonMapper.builder().build();
     URI INTERNAL_SERVER_ERROR = URI.create("urn:problem-type:belgif:internalServerError");
 
     /**
